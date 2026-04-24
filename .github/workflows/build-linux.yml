@@ -1,0 +1,42 @@
+name: Build Linux x86_64
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake
+
+      - name: Build
+        run: |
+          make -j$(nproc) \
+            CXXFLAGS="-std=c++17 -O3 -march=x86-64 -Wall -Wextra -pthread" \
+            CFLAGS="-O3 -march=x86-64 -Wall -Wextra"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: monerominer-linux-x86_64
+          path: bin/monerominer
+          if-no-files-found: error
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: build-${{ github.run_number }}
+          name: Linux x86_64 build #${{ github.run_number }}
+          files: bin/monerominer
+          fail_on_unmatched_files: true
