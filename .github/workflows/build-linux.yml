@@ -5,6 +5,12 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -12,8 +18,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          submodules: recursive
 
       - name: Install dependencies
         run: |
@@ -23,8 +27,8 @@ jobs:
       - name: Build
         run: |
           make -j$(nproc) \
-            CXXFLAGS="-std=c++17 -O3 -march=x86-64 -Wall -Wextra -pthread" \
-            CFLAGS="-O3 -march=x86-64 -Wall -Wextra"
+            CXXFLAGS="-std=c++17 -O3 -march=x86-64 -mtune=generic -Wall -Wextra -pthread -flto" \
+            CFLAGS="-O3 -march=x86-64 -mtune=generic -Wall -Wextra -flto"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
