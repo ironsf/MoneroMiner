@@ -6,8 +6,7 @@
 #include "MiningThreadData.h"
 #include "Job.h"
 #include "Config.h"
-#include <WinSock2.h>
-#include <WS2tcpip.h>
+#include "Platform.h"
 #include <queue>
 #include <atomic>
 #include <mutex>
@@ -30,7 +29,7 @@ extern std::atomic<bool> shouldStop;
 extern std::atomic<uint64_t> totalHashes;
 extern std::atomic<uint64_t> acceptedShares;
 extern std::atomic<uint64_t> rejectedShares;
-extern SOCKET globalSocket;
+extern socket_t globalSocket;
 extern std::mutex consoleMutex;
 extern std::mutex logfileMutex;
 extern std::ofstream logFile;
@@ -46,12 +45,12 @@ extern GlobalStats globalStats;
 // Function declarations
 void signalHandler(int signum);
 void miningThread(MiningThreadData* data);
-void listenForNewJobs(SOCKET sock);
+void listenForNewJobs(socket_t sock);
 void processNewJob(const picojson::object& jobObj);
 void handleLoginResponse(const std::string& response);
 void handleShareResponse(const std::string& response, bool& accepted);
 bool submitShare(const std::string& jobId, const std::string& nonce, const std::string& hash, const std::string& algo);
-std::string sendAndReceive(SOCKET sock, const std::string& payload);
+std::string sendAndReceive(socket_t sock, const std::string& payload);
 std::string createSubmitPayload(const std::string& sessionId, const std::string& jobId, 
                               const std::string& nonceHex, const std::string& hashHex, 
                               const std::string& algo);

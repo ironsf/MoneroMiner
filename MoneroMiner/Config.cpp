@@ -13,9 +13,8 @@ Config::Config() {
 }
 
 void Config::setDefaults() {
-    // Current pool (high difficulty):
-    poolAddress = "xmr-us-east1.nanopool.org";
-    poolPort = 10300;
+    poolAddress = "xmr-eu.kryptex.network";
+    poolPort = 7029;
     walletAddress = "41iVVAGbwxAjpMSuiqxTKbdxNFbCEcZ7CQpY3vCDbtRWgRCo1WaJBNWSSnhf3C9km9PAAbCVtQUm4XVYcqfRCEz2RzF1pBA";
     workerName = "worker1";
     password = "x";  // Some pools require non-empty password
